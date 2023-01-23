@@ -127,9 +127,7 @@ public class HelloApplication extends Application {
                 fileChooser.getExtensionFilters().addAll(
                         new FileChooser.ExtensionFilter("XML Files", "*.xml"));
                 File selectedFile = fileChooser.showOpenDialog(null);
-                if (selectedFile != null) {
-                    fileField.setText(selectedFile.getAbsolutePath());
-                }
+
                 if (selectedFile != null) {
                     fileField.setText(selectedFile.getAbsolutePath());
                     System.out.println("Selected File: " + selectedFile.getAbsolutePath());
@@ -181,7 +179,7 @@ public class HelloApplication extends Application {
                                           Stage stage = new Stage();
                                           stage.setTitle("Visualize XML File");
                                           stage.setMinWidth(1000);
-                                          stage.setMinHeight(800);
+                                          stage.setMinHeight(500);
 
 
                                           TableView<ObservableList<String>> table = new TableView<>();
@@ -215,7 +213,44 @@ public class HelloApplication extends Application {
 
                                           Scene scene = new Scene(vBox);
                                           stage.setScene(scene);
+                                          getData();
                                           stage.show();
+
+                                      }
+
+                                      public void getData() {
+                                          //read XML file and display it
+
+                                          try {
+                                              SAXBuilder builder = new SAXBuilder();
+                                              File xmlFile = new File("Films.xml");
+
+                                              Document document = (Document) builder.build(xmlFile);
+                                              Element rootNode = document.getRootElement();
+                                              List list = rootNode.getChildren("film");
+                                              for (int i = 0; i < list.size(); i++) {
+                                                  Element node = (Element) list.get(i);
+                                                  Label title = new Label("Title: " + node.getChildText("TITRE"));
+                                                  gridPane.add(title, 0, i);
+                                                  Label annee = new Label("Annee: " + node.getChildText("ANNEE"));
+                                                  gridPane.add(annee, 1, i);
+                                                  Label genre = new Label("Genre: " + node.getChildText("GENRE"));
+                                                  gridPane.add(genre, 2, i);
+                                                  Label pays = new Label("Pays: " + node.getChildText("PAYS"));
+                                                  gridPane.add(pays, 3, i);
+                                                  Label MES = new Label("MES: " + node.getChildText("MES"));
+                                                  gridPane.add(MES, 4, i);
+                                                  Label prenom = new Label("Prenom: " + node.getChildText("PRENOM"));
+                                                  gridPane.add(prenom, 5, i);
+                                                  Label nom = new Label("Nom: " + node.getChildText("NOM"));
+                                                  gridPane.add(nom, 6, i);
+                                                  Label resume = new Label("Resume: " + node.getChildText("RESUME"));
+                                                  gridPane.add(resume, 7, i);
+
+                                              }
+                                          } catch (IOException | JDOMException io) {
+                                              System.out.println(io.getMessage());
+                                          }
                                       }
                                   }
         );
@@ -293,58 +328,6 @@ public class HelloApplication extends Application {
         submitButton.setDefaultButton(true);
         submitButton.setPrefWidth(100);
         gridPane.add(submitButton, 0, 9, 2, 1);
-
-        Button Visualize = new Button("Visualize");
-        Visualize.setPrefHeight(40);
-        Visualize.setDefaultButton(true);
-        Visualize.setPrefWidth(100);
-        gridPane.add(Visualize, 0, 10, 2, 1);
-
-        Visualize.setOnAction(new EventHandler<ActionEvent>() {
-                                  @Override
-                                  public void handle(ActionEvent event) {
-                                      Stage stage = new Stage();
-                                      stage.setTitle("Visualisation");
-                                      stage.show();
-                                      getData();
-
-                                  }
-
-                                  public void getData() {
-                                      //read XML file and display it
-
-                                      try {
-                                          SAXBuilder builder = new SAXBuilder();
-                                          File xmlFile = new File("Films.xml");
-                                          Document document = (Document) builder.build(xmlFile);
-                                          Element rootNode = document.getRootElement();
-                                          List list = rootNode.getChildren("film");
-                                          for (int i = 0; i < list.size(); i++) {
-                                              Element node = (Element) list.get(i);
-                                              Label title = new Label("Title: " + node.getChildText("TITRE"));
-                                              gridPane.add(title, 0, i);
-                                              Label annee = new Label("Annee: " + node.getChildText("ANNEE"));
-                                              gridPane.add(annee, 1, i);
-                                              Label genre = new Label("Genre: " + node.getChildText("GENRE"));
-                                              gridPane.add(genre, 2, i);
-                                              Label pays = new Label("Pays: " + node.getChildText("PAYS"));
-                                              gridPane.add(pays, 3, i);
-                                              Label MES = new Label("MES: " + node.getChildText("MES"));
-                                              gridPane.add(MES, 4, i);
-                                              Label prenom = new Label("Prenom: " + node.getChildText("PRENOM"));
-                                              gridPane.add(prenom, 5, i);
-                                              Label nom = new Label("Nom: " + node.getChildText("NOM"));
-                                              gridPane.add(nom, 6, i);
-                                              Label resume = new Label("Resume: " + node.getChildText("RESUME"));
-                                              gridPane.add(resume, 7, i);
-
-                                          }
-                                      } catch (IOException | JDOMException io) {
-                                          System.out.println(io.getMessage());
-                                      }
-                                  }
-                              }
-        );
 
 
         GridPane.setHalignment(submitButton, HPos.CENTER);
