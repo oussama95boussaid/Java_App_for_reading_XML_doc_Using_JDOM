@@ -1,37 +1,29 @@
 package com.example.jdom_java_project;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 import javafx.stage.FileChooser;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.stage.Stage;
-import javafx.fxml.*;
 import javafx.stage.Window;
-import javafx.geometry.*;
-
-import java.util.logging.*;
 
 import javafx.collections.ObservableList;
-import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
+import javafx.scene.control.TextArea;
 
-import org.jdom2.CDATA;
-import org.jdom2.Content;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -39,15 +31,16 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 import java.io.*;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class HelloApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setTitle("XMLEditor");
+        primaryStage.setTitle("XMLPROJECT");
 
         // Create the registration form grid pane
         GridPane gridPane = createRegistrationFormPane();
@@ -165,71 +158,301 @@ public class HelloApplication extends Application {
         gridPane.add(VisualizeData, 0, 18, 4, 1);
 
         VisualizeData.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (fileField.getText().isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!",
-                            "Please Select XML File");
-                    return;
-                }
-                Stage stage = new Stage();
-                stage.setTitle("Visualize XML File");
-                stage.setMinWidth(1000);
-                stage.setMinHeight(500);
+                                      @Override
 
-                TableView<ObservableList<String>> table = new TableView<>();
-                table.setPrefWidth(700);
-                table.setPrefHeight(500);
 
-                VBox vBox = new VBox();
-                vBox.getChildren().add(table);
+                                      public void handle(ActionEvent event) {
+                                          if (fileField.getText().isEmpty()) {
+                                              showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!",
+                                                      "Please Select XML File");
+                                              return;
+                                          }
 
-                vBox.setStyle("-fx-padding: 10;" +
-                        "-fx-border-width: 2;" +
-                        "-fx-border-radius: 5;");
 
-                Scene scene = new Scene(vBox);
-                stage.setScene(scene);
-                getData();
-                stage.show();
+                                          try {
 
-            }
+                                              Stage stage = new Stage();
+                                              stage.setTitle("Visualize Data");
+                                              stage.setMinWidth(1200);
+                                              stage.setMinHeight(((550)));
+                                              final Label label = new Label("FILM DATA");
+                                              label.setFont(new Font("Arial", 20));
 
-            public void getData() {
-                // read XML file and display it
 
-                try {
-                    SAXBuilder builder = new SAXBuilder();
-                    File xmlFile = new File("Films.xml");
-                    Document document = (Document) builder.build(xmlFile);
-                    Element rootNode = document.getRootElement();
-                    List<Element> list = rootNode.getChildren("FILM");
-                    for (int i = 0; i < list.size(); i++) {
-                        Element node = (Element) list.get(i);
-                        Label title = new Label("Title: " + node.getChildText("TITRE"));
-                        gridPane.add(title, 0, i);
-                        Label annee = new Label("Annee: " + node.getChildText("ANNEE"));
-                        gridPane.add(annee, 1, i);
-                        Label genre = new Label("Genre: " + node.getChildText("GENRE"));
-                        gridPane.add(genre, 2, i);
-                        Label pays = new Label("Pays: " + node.getChildText("PAYS"));
-                        gridPane.add(pays, 3, i);
-                        Label MES = new Label("MES: " + node.getChildText("MES"));
-                        gridPane.add(MES, 4, i);
-                        Label prenom = new Label("Prenom: " + node.getChildText("PRENOM"));
-                        gridPane.add(prenom, 5, i);
-                        Label nom = new Label("Nom: " + node.getChildText("NOM"));
-                        gridPane.add(nom, 6, i);
-                        Label resume = new Label("Resume: " + node.getChildText("RESUME"));
-                        gridPane.add(resume, 7, i);
+//                                              SAXBuilder builder = new SAXBuilder();
+//                                              File xmlFile = new File("Films.xml");
+//                                              Document document = (Document) builder.build(xmlFile);
+//                                              Element rootNode = document.getRootElement();
 
-                    }
-                } catch (IOException | JDOMException io) {
-                    System.out.println(io.getMessage());
-                }
-            }
-        });
 
+                                              SAXBuilder saxBuilder = new SAXBuilder();
+                                              Document document = saxBuilder.build(new File("Films.xml"));
+                                              Element rootNode = document.getRootElement();
+                                              List<Element> list = rootNode.getChildren("FILM");
+
+
+// Create table
+                                              TableView<Person> table = new TableView<>();
+                                              table.setPrefWidth(1200);
+                                              table.setPrefHeight(500);
+                                              table.setEditable(true);
+
+// Create columns
+                                              TableColumn col1 = new TableColumn<>("TITRE");
+                                              col1.setMinWidth(150);
+                                              col1.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+//                                              TableColumn<ObservableList<String>, String> col2 = new TableColumn<>("ANNEE");
+//                                              col2.setMinWidth(150);
+//                                              TableColumn<ObservableList<String>, String> col3 = new TableColumn<>("GENRE");
+//                                              col3.setMinWidth(150);
+//                                              TableColumn<ObservableList<String>, String> col4 = new TableColumn<>("PAYS");
+//                                              col4.setMinWidth(150);
+//                                              TableColumn<ObservableList<String>, String> col8 = new TableColumn<>("MES");
+//                                              col8.setMinWidth(150);
+//                                              TableColumn<ObservableList<String>, String> col5 = new TableColumn<>("PRENOM");
+//                                              col5.setMinWidth(150);
+//                                              TableColumn<ObservableList<String>, String> col6 = new TableColumn<>("NOM");
+//                                              col6.setMinWidth(150);
+//                                              TableColumn<ObservableList<String>, String> col7 = new TableColumn<>("RESUME");
+//                                              col7.setMinWidth(150);
+//                                              , col2, col3, col4, col5, col6, col7
+                                              table.getColumns().addAll(col1);
+
+//                                              DefaultTableModel model = new DefaultTableModel();
+//                                              model.addColumn("Titre");
+//                                              model.addColumn("Genre");
+//                                              model.addColumn("Pays");
+//                                              model.addColumn("Rôles");
+//                                              model.addColumn("Résumé");
+//
+//                                              for (Element film : rootNode.getChildren("FILM")) {
+//                                                  String titre = film.getChildText("TITRE");
+//
+//                                                  System.out.println("mkayna m3ana");
+//                                                  System.out.println(titre);
+//
+//                                                  String genre = film.getChildText("GENRE");
+//                                                  String pays = film.getChildText("PAYS");
+//                                                  String roles = "";
+//                                                  for (Element role : film.getChild("ROLES").getChildren("ROLE")) {
+//                                                      roles += role.getChildText("PRENOM") + " " + role.getChildText("NOM") + " (" + role.getChildText("INTITULE") + ") ";
+//                                                  }
+//                                                  ObservableList<String> row = FXCollections.observableArrayList();
+//                                                  String resume = film.getChildText("RESUME");
+//                                                  row.addAll(Arrays.asList(titre, genre, pays, roles, resume));
+//                                                  model.addRow(new Object[]{titre, genre, pays, roles, resume});
+                                              //}
+                                              String res;
+
+                                              for (int i = 0; i < list.size(); i++) {
+                                                  Element node = (Element) list.get(i);
+                                                  ObservableList<Person> row;
+                                                  row = FXCollections.observableArrayList(
+                                                          new Person(node.getChildText("TITRE"))
+                                                  );
+                                                  System.out.println("mkayna m3ana");
+                                             System.out.println(row);
+//                                                  row.add(node.getChildText("TITRE"));
+//                                                  System.out.println(node.getChildText("TITRE"));
+//                                                  row.add(node.getChildText("ANNEE"));
+//                                                  row.add(node.getChildText("GENRE"));
+//                                                  row.add(node.getChildText("PAYS"));
+//                                                  row.add(node.getChildText("MES"));
+//                                                  row.add(node.getChildText("PRENOM"));
+//                                                  row.add(node.getChildText("NOM"));
+//                                                  row.add(node.getChildText("RESUME"));
+                                                   ;
+                                                  //table.getItems().add(new Person(new String(table.setItems(row))));
+                                                  table.getItems().add(new Person(table.getItems().add(row).toString()));
+
+
+                                              }
+
+
+                                              VBox vBox = new VBox();
+                                              vBox.getChildren().add(table);
+                                              //getData(vBox);
+
+
+                                              vBox.setStyle("-fx-padding: 10;" +
+                                                      "-fx-border-width: 2;" +
+                                                      "-fx-border-radius: 5;");
+
+                                              Scene scene = new Scene(vBox);
+                                              stage.setScene(scene);
+
+                                              stage.show();
+
+                                          } catch (IOException | JDOMException io) {
+                                              System.out.println(io.getMessage());
+                                          }
+
+
+                                      }
+
+
+                                      public VBox getData(VBox vBox) {
+                                          // read XML file and display it
+
+                                          try {
+                                              SAXBuilder builder = new SAXBuilder();
+                                              File xmlFile = new File("Films.xml");
+                                              Document document = (Document) builder.build(xmlFile);
+                                              Element rootNode = document.getRootElement();
+                                              List<Element> list = rootNode.getChildren("FILM");
+                                              for (int i = 0; i < list.size(); i++) {
+                                                  Element node = (Element) list.get(i);
+                                                  Label title = new Label("Title: " + node.getChildText("TITRE"));
+                                                  vBox.getChildren().add(title);
+                                                  Label annee = new Label("Annee: " + node.getChildText("ANNEE"));
+                                                  vBox.getChildren().add(annee);
+
+                                                  Label genre = new Label("Genre: " + node.getChildText("GENRE"));
+                                                  gridPane.add(genre, 2, i);
+                                                  Label pays = new Label("Pays: " + node.getChildText("PAYS"));
+                                                  gridPane.add(pays, 3, i);
+                                                  Label MES = new Label("MES: " + node.getChildText("MES"));
+                                                  gridPane.add(MES, 4, i);
+                                                  Label prenom = new Label("Prenom: " + node.getChildText("PRENOM"));
+                                                  gridPane.add(prenom, 5, i);
+                                                  Label nom = new Label("Nom: " + node.getChildText("NOM"));
+                                                  gridPane.add(nom, 6, i);
+                                                  Label resume = new Label("Resume: " + node.getChildText("RESUME"));
+                                                  gridPane.add(resume, 7, i);
+
+                                              }
+
+                                              return vBox;
+                                          } catch (IOException | JDOMException io) {
+                                              System.out.println(io.getMessage());
+                                          }
+                                          return vBox;
+                                      }
+                                  }
+
+        );
+
+        Button VisualizeXMLFile = new Button("Visualize XML File");
+        VisualizeXMLFile.setPrefHeight(40);
+        VisualizeXMLFile.setPrefWidth(180);
+        GridPane.setHalignment(VisualizeXMLFile, HPos.RIGHT);
+        gridPane.add(VisualizeXMLFile, 0, 20, 4, 1);
+
+        VisualizeXMLFile.setOnAction(new EventHandler<ActionEvent>() {
+                                         @Override
+                                         public void handle(ActionEvent event) {
+                                             if (fileField.getText().isEmpty()) {
+                                                 showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!",
+                                                         "Please Select XML File");
+                                                 return;
+                                             }
+
+                                             try {
+
+                                                 Stage stage = new Stage();
+                                                 stage.setTitle("Visualize XML File");
+                                                 stage.setMinWidth(1000);
+                                                 stage.setMinHeight(500);
+
+
+                                                 VBox vBox = new VBox();
+                                                 vBox.getChildren().add(readXMLFile());
+
+
+                                                 vBox.setStyle("-fx-padding: 10;" +
+                                                         "-fx-border-width: 2;" +
+                                                         "-fx-border-radius: 5;");
+
+                                                 Scene scene = new Scene(vBox, 600, 400);
+                                                 stage.setScene(scene);
+
+                                                 stage.show();
+
+                                             } catch (IOException | JDOMException io) {
+                                                 System.out.println(io.getMessage());
+                                             }
+
+                                         }
+
+                                         public TextArea readXMLFile() throws JDOMException, IOException {
+
+                                             TextArea textArea = new TextArea();
+                                             textArea.setMinHeight(440);
+                                             textArea.setMaxHeight(440);
+
+                                             Element FilmElement = null;
+                                             Element artistElement = null;
+                                             Element RolesElement = null;
+                                             Element RoleElement = null;
+
+                                             Element FilmsElement = ((Document) (new SAXBuilder()).build(new File("Films.xml"))).getRootElement();
+                                             textArea.appendText("<" + FilmsElement.getName() + ">\n");
+
+                                             List<Element> FilmsList = FilmsElement.getChildren("FILM");
+                                             for (int i = 0; i < FilmsList.size(); i++) {
+                                                 FilmElement = (Element) FilmsList.get(i);
+                                                 textArea.appendText("\t<" + FilmElement.getName() + " Annee=" + FilmElement.getAttributeValue("Annee") + ">\n");
+                                                 textArea.appendText("\t\t<TITRE>" + FilmElement.getChildText("TITRE") + "</TITRE>\n");
+                                                 textArea.appendText("\t\t<GENRE>" + FilmElement.getChildText("GENRE") + "</GENRE>\n");
+                                                 textArea.appendText("\t\t<PAYS>" + FilmElement.getChildText("PAYS") + "</PAYS>\n");
+                                                 textArea.appendText("\t\t<MES>" + FilmElement.getChildText("MES") + "</MES>\n");
+                                                 textArea.appendText("\t\t<RESUME>" + FilmElement.getChildText("RESUME") + "</RESUME>\n");
+
+                                                 RolesElement = FilmsList.get(i).getChild("ROLES");
+
+                                                 textArea.appendText("\t\t<" + RolesElement.getName() + ">\n");
+                                                 List<Element> RoleList = RolesElement.getChildren("ROLE");
+                                                 for (int z = 0; z < RoleList.size(); z++) {
+                                                     RoleElement = (Element) RoleList.get(z);
+                                                     textArea.appendText("\t\t<" + RoleElement.getName() + ">");
+                                                     textArea.appendText("\t\t<PRENOM>" + RoleElement.getChildText("PRENOM") + "</PRENOM>\n");
+                                                     textArea.appendText("\t\t<NOM>" + RoleElement.getChildText("NOM") + "</NOM>\n");
+                                                     textArea.appendText("\t\t<INTITULE>" + RoleElement.getChildText("INTITULE") + "</INTITULE>\n");
+                                                     textArea.appendText("</" + RoleElement.getName() + ">\n");
+                                                 }
+
+                                                 textArea.appendText("\t\t</" + RolesElement.getName() + ">\n");
+                                                 textArea.appendText("\t</" + FilmElement.getName() + ">\n");
+
+                                             }
+
+                                             List<Element> artistlist = FilmsElement.getChildren("ARTISTE");
+                                             for (int j = 0; j < artistlist.size(); j++) {
+                                                 artistElement = artistlist.get(j);
+                                                 textArea.appendText("\t<" + artistElement.getName() + " id=" + artistElement.getAttributeValue("id") + ">\n");
+                                                 textArea.appendText("\t\t<ACTNOM>" + artistElement.getChildText("ACTNOM") + "</ACTNOM>\n");
+                                                 textArea.appendText("\t\t<ACTPNOM>" + artistElement.getChildText("ACTPNOM") + "</ACTPNOM>\n");
+                                                 textArea.appendText("\t\t<ANNEENAISS>" + artistElement.getChildText("ANNEENAISS") + "</ANNEENAISS>\n");
+                                                 textArea.appendText("\t</" + artistElement.getName() + ">\n");
+                                             }
+
+
+                                             textArea.appendText("<" + FilmsElement.getName() + ">\n");
+
+
+                                             return textArea;
+                                         }
+                                     }
+
+        );
+
+
+    }
+
+    public class Person {
+        public final SimpleStringProperty titel;
+
+        Person(String ftitel) {
+            this.titel = new SimpleStringProperty(ftitel);
+        }
+
+        public String getFirstName() {
+            return titel.get();
+        }
+
+        public void setFirstName(String ftitel) {
+            titel.set(ftitel);
+        }
     }
 
     private void addUIControls(GridPane gridPane) {

@@ -8,6 +8,7 @@ module com.example.jdom_java_project {
     requires org.kordamp.bootstrapfx.core;
     requires java.logging;
     requires org.jdom2;
+    requires java.desktop;
 
     opens com.example.jdom_java_project to javafx.fxml;
     exports com.example.jdom_java_project;
