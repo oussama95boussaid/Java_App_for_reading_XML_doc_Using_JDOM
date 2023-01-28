@@ -242,7 +242,10 @@ public class HelloApplication extends Application {
 //                                                  row.addAll(Arrays.asList(titre, genre, pays, roles, resume));
 //                                                  model.addRow(new Object[]{titre, genre, pays, roles, resume});
                                               //}
-                                              String res;
+                                              ObservableList<Person> row;
+                                              row = FXCollections.observableArrayList(
+                                                      new Person()
+                                              );
 
                                               for (int i = 0; i < list.size(); i++) {
                                                   Element node = (Element) list.get(i);
@@ -261,13 +264,13 @@ public class HelloApplication extends Application {
 //                                                  row.add(node.getChildText("PRENOM"));
 //                                                  row.add(node.getChildText("NOM"));
 //                                                  row.add(node.getChildText("RESUME"));
-                                                   ;
+
                                                   //table.getItems().add(new Person(new String(table.setItems(row))));
                                                   table.getItems().add(new Person(table.getItems().add(row).toString()));
 
 
                                               }
-
+                                              table.setItems(row);
 
                                               VBox vBox = new VBox();
                                               vBox.getChildren().add(table);
