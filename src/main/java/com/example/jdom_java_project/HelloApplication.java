@@ -99,7 +99,6 @@ public class HelloApplication extends Application {
         GridPane.setHalignment(headerLabel, HPos.CENTER);
         gridPane.add(headerLabel, 0, 0, 4, 1); // change column index to 0
 
-
         Label titleLabel = new Label("Get Started By Uploading Your XML File");
         titleLabel.setFont(Font.font("Barlow", 24));
         GridPane.setHalignment(titleLabel, HPos.CENTER);
@@ -165,131 +164,112 @@ public class HelloApplication extends Application {
         gridPane.add(VisualizeData, 0, 16, 4, 1);
 
         VisualizeData.setOnAction(new EventHandler<ActionEvent>() {
-                                      @Override
+            @Override
 
+            public void handle(ActionEvent event) {
+                if (fileField.getText().isEmpty()) {
+                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!",
+                            "Please Select XML File");
+                    return;
+                }
 
-                                      public void handle(ActionEvent event) {
-                                          if (fileField.getText().isEmpty()) {
-                                              showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!",
-                                                      "Please Select XML File");
-                                              return;
-                                          }
+                try {
 
+                    Stage stage = new Stage();
+                    stage.setTitle("Visualize Data");
+                    stage.setMinWidth(1200);
+                    stage.setMinHeight(((550)));
+                    final Label label = new Label("FILM DATA");
+                    label.setFont(new Font("Arial", 20));
 
-                                          try {
+                    SAXBuilder saxBuilder = new SAXBuilder();
+                    Document document = saxBuilder.build(new File(fileField.getText()));
+                    Element rootNode = document.getRootElement();
+                    List<Element> list = rootNode.getChildren("FILM");
 
-                                              Stage stage = new Stage();
-                                              stage.setTitle("Visualize Data");
-                                              stage.setMinWidth(1200);
-                                              stage.setMinHeight(((550)));
-                                              final Label label = new Label("FILM DATA");
-                                              label.setFont(new Font("Arial", 20));
+                    TableView<Person> table = new TableView<>();
+                    table.setPrefWidth(1200);
+                    table.setPrefHeight(500);
+                    table.setEditable(true);
 
+                    TableColumn col1 = new TableColumn<>("TITRE");
+                    col1.setMinWidth(150);
+                    col1.setCellValueFactory(new PropertyValueFactory<>("titel"));
 
-//                                              SAXBuilder builder = new SAXBuilder();
-//                                              File xmlFile = new File("Films.xml");
-//                                              Document document = (Document) builder.build(xmlFile);
-//                                              Element rootNode = document.getRootElement();
+                    TableColumn col2 = new TableColumn<>("ANNEE");
+                    col2.setMinWidth(150);
+                    col2.setCellValueFactory(new PropertyValueFactory<>("annee"));
 
+                    TableColumn col3 = new TableColumn<>("GENRE");
+                    col3.setMinWidth(150);
+                    col3.setCellValueFactory(new PropertyValueFactory<>("genre"));
+                    TableColumn col4 = new TableColumn<>("PAYS");
+                    col4.setMinWidth(150);
+                    col4.setCellValueFactory(new PropertyValueFactory<>("pays"));
+                    TableColumn col5 = new TableColumn<>("PRENOM");
+                    col5.setMinWidth(150);
+                    col5.setCellValueFactory(new PropertyValueFactory<>("prenom"));
 
-                                              SAXBuilder saxBuilder = new SAXBuilder();
-                                              Document document = saxBuilder.build(new File(fileField.getText()));
-                                              Element rootNode = document.getRootElement();
-                                              List<Element> list = rootNode.getChildren("FILM");
+                    TableColumn col6 = new TableColumn<>("NOM");
+                    col6.setMinWidth(150);
+                    col6.setCellValueFactory(new PropertyValueFactory<>("nom"));
+                    TableColumn col7 = new TableColumn<>("RESUME");
+                    col7.setMinWidth(150);
+                    col7.setCellValueFactory(new PropertyValueFactory<>("resume"));
+                    TableColumn col8 = new TableColumn<>("MES idRef ");
+                    col8.setCellValueFactory(new PropertyValueFactory<>("mesIdRef"));
+                    col8.setMinWidth(150);
 
+                    table.getColumns().addAll(col1, col2, col3, col4, col5, col6, col7, col8);
 
-                                              TableView<Person> table = new TableView<>();
-                                              table.setPrefWidth(1200);
-                                              table.setPrefHeight(500);
-                                              table.setEditable(true);
+                    for (int i = 0; i < list.size(); i++) {
+                        Element node = (Element) list.get(i);
 
-                                              TableColumn col1 = new TableColumn<>("TITRE");
-                                              col1.setMinWidth(150);
-                                              col1.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-//                                              TableColumn<ObservableList<String>, String> col2 = new TableColumn<>("ANNEE");
-//                                              col2.setMinWidth(150);
-//                                              TableColumn<ObservableList<String>, String> col3 = new TableColumn<>("GENRE");
-//                                              col3.setMinWidth(150);
-//                                              TableColumn<ObservableList<String>, String> col4 = new TableColumn<>("PAYS");
-//                                              col4.setMinWidth(150);
-//                                              TableColumn<ObservableList<String>, String> col8 = new TableColumn<>("MES");
-//                                              col8.setMinWidth(150);
-//                                              TableColumn<ObservableList<String>, String> col5 = new TableColumn<>("PRENOM");
-//                                              col5.setMinWidth(150);
-//                                              TableColumn<ObservableList<String>, String> col6 = new TableColumn<>("NOM");
-//                                              col6.setMinWidth(150);
-//                                              TableColumn<ObservableList<String>, String> col7 = new TableColumn<>("RESUME");
-//                                              col7.setMinWidth(150);
-//                                              , col2, col3, col4, col5, col6, col7
-                                              table.getColumns().addAll(col1);
+                        String prenom = "", nom = "";
+                        Element role = node.getChild("ROLES").getChild("ROLE");
+                        if (role != null) {
+                            Element prenomNode = role.getChild("PRENOM");
+                            if (prenomNode != null) {
+                                prenom = prenomNode.getText();
+                            }
+                            Element nomNode = role.getChild("NOM");
+                            if (nomNode != null) {
+                                nom = nomNode.getText();
+                            }
 
-//                                              DefaultTableModel model = new DefaultTableModel();
-//                                              model.addColumn("Titre");
-//                                              model.addColumn("Genre");
-//                                              model.addColumn("Pays");
-//                                              model.addColumn("Rôles");
-//                                              model.addColumn("Résumé");
-//
-//                                              for (Element film : rootNode.getChildren("FILM")) {
-//                                                  String titre = film.getChildText("TITRE");
-//
-//                                                  System.out.println("mkayna m3ana");
-//                                                  System.out.println(titre);
-//
-//                                                  String genre = film.getChildText("GENRE");
-//                                                  String pays = film.getChildText("PAYS");
-//                                                  String roles = "";
-//                                                  for (Element role : film.getChild("ROLES").getChildren("ROLE")) {
-//                                                      roles += role.getChildText("PRENOM") + " " + role.getChildText("NOM") + " (" + role.getChildText("INTITULE") + ") ";
-//                                                  }
-//                                                  ObservableList<String> row = FXCollections.observableArrayList();
-//                                                  String resume = film.getChildText("RESUME");
-//                                                  row.addAll(Arrays.asList(titre, genre, pays, roles, resume));
-//                                                  model.addRow(new Object[]{titre, genre, pays, roles, resume});
-                                              //}
+                        }
 
-                                              for (int i = 0; i < list.size(); i++) {
-                                                  Element node = (Element) list.get(i);
-                                                  ObservableList<Person> row;
-                                                  row = FXCollections.observableArrayList(
-                                                          new Person(node.getChildText("TITRE"))
-                                                  );
-                                                  System.out.println("mkayna m3ana");
-                                                  System.out.println(row);
-//                                                  row.add(node.getChildText("TITRE"));
-//                                                  System.out.println(node.getChildText("TITRE"));
-//                                                  row.add(node.getChildText("ANNEE"));
-//                                                  row.add(node.getChildText("GENRE"));
-//                                                  row.add(node.getChildText("PAYS"));
-//                                                  row.add(node.getChildText("MES"));
-//                                                  row.add(node.getChildText("PRENOM"));
-//                                                  row.add(node.getChildText("NOM"));
-//                                                  row.add(node.getChildText("RESUME"));
+                        ObservableList<Person> row;
+                        row = FXCollections.observableArrayList(new Person(node.getChildText("TITRE"),
+                                node.getAttributeValue("Annee"), node.getChildText("GENRE"), node.getChildText("PAYS"),
+                                prenom, nom,
+                                node.getChildText("RESUME"),
+                                node.getAttributeValue("mesIdRef")));
 
-                                                  table.getItems().addAll(row);
-                                              }
-                                              VBox vBox = new VBox();
-                                              vBox.getChildren().add(table);
-                                              //getData(vBox);
+                        System.out.println(row);
 
+                        table.getItems().addAll(row);
+                    }
+                    VBox vBox = new VBox();
+                    vBox.getChildren().add(table);
+                    // getData(vBox);
 
-                                              vBox.setStyle("-fx-padding: 10;" +
-                                                      "-fx-border-width: 2;" +
-                                                      "-fx-border-radius: 5;");
+                    vBox.setStyle("-fx-padding: 10;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-border-radius: 5;");
 
-                                              Scene scene = new Scene(vBox);
-                                              stage.setScene(scene);
+                    Scene scene = new Scene(vBox);
+                    stage.setScene(scene);
 
-                                              stage.show();
+                    stage.show();
 
-                                          } catch (IOException | JDOMException io) {
-                                              System.out.println(io.getMessage());
-                                          }
+                } catch (IOException | JDOMException io) {
+                    System.out.println(io.getMessage());
+                }
 
+            }
 
-                                      }
-
-                                  }
+        }
 
         );
 
@@ -300,120 +280,193 @@ public class HelloApplication extends Application {
         gridPane.add(VisualizeXMLFile, 0, 16, 4, 1);
 
         VisualizeXMLFile.setOnAction(new EventHandler<ActionEvent>() {
-                                         @Override
-                                         public void handle(ActionEvent event) {
-                                             if (fileField.getText().isEmpty()) {
-                                                 showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!",
-                                                         "Please Select XML File");
-                                                 return;
-                                             }
+            @Override
+            public void handle(ActionEvent event) {
+                if (fileField.getText().isEmpty()) {
+                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!",
+                            "Please Select XML File");
+                    return;
+                }
 
-                                             try {
+                try {
 
-                                                 Stage stage = new Stage();
-                                                 stage.setTitle("Visualize XML File");
-                                                 stage.setMinWidth(1000);
-                                                 stage.setMinHeight(500);
+                    Stage stage = new Stage();
+                    stage.setTitle("Visualize XML File");
+                    stage.setMinWidth(1000);
+                    stage.setMinHeight(500);
 
+                    VBox vBox = new VBox();
+                    vBox.getChildren().add(readXMLFile());
 
-                                                 VBox vBox = new VBox();
-                                                 vBox.getChildren().add(readXMLFile());
+                    vBox.setStyle("-fx-padding: 10;" +
+                            "-fx-border-width: 2;" +
+                            "-fx-border-radius: 5;");
 
+                    Scene scene = new Scene(vBox, 600, 400);
+                    stage.setScene(scene);
 
-                                                 vBox.setStyle("-fx-padding: 10;" +
-                                                         "-fx-border-width: 2;" +
-                                                         "-fx-border-radius: 5;");
+                    stage.show();
 
-                                                 Scene scene = new Scene(vBox, 600, 400);
-                                                 stage.setScene(scene);
+                } catch (IOException | JDOMException io) {
+                    System.out.println(io.getMessage());
+                }
 
-                                                 stage.show();
+            }
 
-                                             } catch (IOException | JDOMException io) {
-                                                 System.out.println(io.getMessage());
-                                             }
+            public TextArea readXMLFile() throws JDOMException, IOException {
 
-                                         }
+                TextArea textArea = new TextArea();
+                textArea.setMinHeight(440);
+                textArea.setMaxHeight(440);
 
-                                         public TextArea readXMLFile() throws JDOMException, IOException {
+                Element FilmElement = null;
+                Element artistElement = null;
+                Element RolesElement = null;
+                Element RoleElement = null;
 
-                                             TextArea textArea = new TextArea();
-                                             textArea.setMinHeight(440);
-                                             textArea.setMaxHeight(440);
+                Element FilmsElement = ((Document) (new SAXBuilder()).build(new File(fileField.getText())))
+                        .getRootElement();
+                textArea.appendText("<" + FilmsElement.getName() + ">\n");
 
-                                             Element FilmElement = null;
-                                             Element artistElement = null;
-                                             Element RolesElement = null;
-                                             Element RoleElement = null;
+                List<Element> FilmsList = FilmsElement.getChildren("FILM");
+                for (int i = 0; i < FilmsList.size(); i++) {
+                    FilmElement = (Element) FilmsList.get(i);
+                    textArea.appendText(
+                            "\t<" + FilmElement.getName() + " Annee=" + FilmElement.getAttributeValue("Annee") + ">\n");
+                    textArea.appendText("\t\t<TITRE>" + FilmElement.getChildText("TITRE") + "</TITRE>\n");
+                    textArea.appendText("\t\t<GENRE>" + FilmElement.getChildText("GENRE") + "</GENRE>\n");
+                    textArea.appendText("\t\t<PAYS>" + FilmElement.getChildText("PAYS") + "</PAYS>\n");
+                    textArea.appendText("\t\t<MES>" + FilmElement.getChildText("MES") + "</MES>\n");
+                    textArea.appendText("\t\t<RESUME>" + FilmElement.getChildText("RESUME") + "</RESUME>\n");
 
-                                             Element FilmsElement = ((Document) (new SAXBuilder()).build(new File(fileField.getText()))).getRootElement();
-                                             textArea.appendText("<" + FilmsElement.getName() + ">\n");
+                    RolesElement = FilmsList.get(i).getChild("ROLES");
 
-                                             List<Element> FilmsList = FilmsElement.getChildren("FILM");
-                                             for (int i = 0; i < FilmsList.size(); i++) {
-                                                 FilmElement = (Element) FilmsList.get(i);
-                                                 textArea.appendText("\t<" + FilmElement.getName() + " Annee=" + FilmElement.getAttributeValue("Annee") + ">\n");
-                                                 textArea.appendText("\t\t<TITRE>" + FilmElement.getChildText("TITRE") + "</TITRE>\n");
-                                                 textArea.appendText("\t\t<GENRE>" + FilmElement.getChildText("GENRE") + "</GENRE>\n");
-                                                 textArea.appendText("\t\t<PAYS>" + FilmElement.getChildText("PAYS") + "</PAYS>\n");
-                                                 textArea.appendText("\t\t<MES>" + FilmElement.getChildText("MES") + "</MES>\n");
-                                                 textArea.appendText("\t\t<RESUME>" + FilmElement.getChildText("RESUME") + "</RESUME>\n");
+                    textArea.appendText("\t\t<" + RolesElement.getName() + ">\n");
+                    List<Element> RoleList = RolesElement.getChildren("ROLE");
+                    for (int z = 0; z < RoleList.size(); z++) {
+                        RoleElement = (Element) RoleList.get(z);
+                        textArea.appendText("\t\t<" + RoleElement.getName() + ">");
+                        textArea.appendText("\t\t<PRENOM>" + RoleElement.getChildText("PRENOM") + "</PRENOM>\n");
+                        textArea.appendText("\t\t<NOM>" + RoleElement.getChildText("NOM") + "</NOM>\n");
+                        textArea.appendText("\t\t<INTITULE>" + RoleElement.getChildText("INTITULE") + "</INTITULE>\n");
+                        textArea.appendText("</" + RoleElement.getName() + ">\n");
+                    }
 
-                                                 RolesElement = FilmsList.get(i).getChild("ROLES");
+                    textArea.appendText("\t\t</" + RolesElement.getName() + ">\n");
+                    textArea.appendText("\t</" + FilmElement.getName() + ">\n");
 
-                                                 textArea.appendText("\t\t<" + RolesElement.getName() + ">\n");
-                                                 List<Element> RoleList = RolesElement.getChildren("ROLE");
-                                                 for (int z = 0; z < RoleList.size(); z++) {
-                                                     RoleElement = (Element) RoleList.get(z);
-                                                     textArea.appendText("\t\t<" + RoleElement.getName() + ">");
-                                                     textArea.appendText("\t\t<PRENOM>" + RoleElement.getChildText("PRENOM") + "</PRENOM>\n");
-                                                     textArea.appendText("\t\t<NOM>" + RoleElement.getChildText("NOM") + "</NOM>\n");
-                                                     textArea.appendText("\t\t<INTITULE>" + RoleElement.getChildText("INTITULE") + "</INTITULE>\n");
-                                                     textArea.appendText("</" + RoleElement.getName() + ">\n");
-                                                 }
+                }
 
-                                                 textArea.appendText("\t\t</" + RolesElement.getName() + ">\n");
-                                                 textArea.appendText("\t</" + FilmElement.getName() + ">\n");
+                List<Element> artistlist = FilmsElement.getChildren("ARTISTE");
+                for (int j = 0; j < artistlist.size(); j++) {
+                    artistElement = artistlist.get(j);
+                    textArea.appendText(
+                            "\t<" + artistElement.getName() + " id=" + artistElement.getAttributeValue("id") + ">\n");
+                    textArea.appendText("\t\t<ACTNOM>" + artistElement.getChildText("ACTNOM") + "</ACTNOM>\n");
+                    textArea.appendText("\t\t<ACTPNOM>" + artistElement.getChildText("ACTPNOM") + "</ACTPNOM>\n");
+                    textArea.appendText(
+                            "\t\t<ANNEENAISS>" + artistElement.getChildText("ANNEENAISS") + "</ANNEENAISS>\n");
+                    textArea.appendText("\t</" + artistElement.getName() + ">\n");
+                }
 
-                                             }
+                textArea.appendText("<" + FilmsElement.getName() + ">\n");
 
-                                             List<Element> artistlist = FilmsElement.getChildren("ARTISTE");
-                                             for (int j = 0; j < artistlist.size(); j++) {
-                                                 artistElement = artistlist.get(j);
-                                                 textArea.appendText("\t<" + artistElement.getName() + " id=" + artistElement.getAttributeValue("id") + ">\n");
-                                                 textArea.appendText("\t\t<ACTNOM>" + artistElement.getChildText("ACTNOM") + "</ACTNOM>\n");
-                                                 textArea.appendText("\t\t<ACTPNOM>" + artistElement.getChildText("ACTPNOM") + "</ACTPNOM>\n");
-                                                 textArea.appendText("\t\t<ANNEENAISS>" + artistElement.getChildText("ANNEENAISS") + "</ANNEENAISS>\n");
-                                                 textArea.appendText("\t</" + artistElement.getName() + ">\n");
-                                             }
-
-
-                                             textArea.appendText("<" + FilmsElement.getName() + ">\n");
-
-
-                                             return textArea;
-                                         }
-                                     }
+                return textArea;
+            }
+        }
 
         );
-
 
     }
 
     public class Person {
         public final SimpleStringProperty titel;
+        public final SimpleStringProperty annee;
+        public final SimpleStringProperty genre;
+        public final SimpleStringProperty pays;
+        public final SimpleStringProperty prenom;
+        public final SimpleStringProperty nom;
+        public final SimpleStringProperty resume;
 
-        Person(String ftitel) {
+        public final SimpleStringProperty mesIdRef;
+
+        Person(String ftitel, String fannee, String fgenre, String fpays, String fprenom, String fnom, String fresume,
+                String fmesIdRef) {
             this.titel = new SimpleStringProperty(ftitel);
+            this.annee = new SimpleStringProperty(fannee);
+            this.genre = new SimpleStringProperty(fgenre);
+            this.pays = new SimpleStringProperty(fpays);
+            this.nom = new SimpleStringProperty(fnom);
+            this.prenom = new SimpleStringProperty(fprenom);
+            this.resume = new SimpleStringProperty(fresume);
+            this.mesIdRef = new SimpleStringProperty(fmesIdRef);
         }
 
-        public String getFirstName() {
+        // getters and setters for each field
+        public String getTitel() {
             return titel.get();
         }
 
-        public void setFirstName(String ftitel) {
+        public void setTitel(String ftitel) {
             titel.set(ftitel);
         }
+
+        public String getAnnee() {
+            return annee.get();
+        }
+
+        public void setAnnee(String fannee) {
+            annee.set(fannee);
+        }
+
+        public String getGenre() {
+            return genre.get();
+        }
+
+        public void setGenre(String fgenre) {
+            genre.set(fgenre);
+        }
+
+        public String getPays() {
+            return pays.get();
+        }
+
+        public void setPays(String fpays) {
+            pays.set(fpays);
+        }
+
+        public String getPrenom() {
+            return prenom.get();
+        }
+
+        public void setPrenom(String fprenom) {
+            prenom.set(fprenom);
+        }
+
+        public String getNom() {
+            return nom.get();
+        }
+
+        public void setNom(String fnom) {
+            nom.set(fnom);
+        }
+
+        public String getResume() {
+            return resume.get();
+        }
+
+        public void setResume(String fresume) {
+            resume.set(fresume);
+        }
+
+        public String getMesIdRef() {
+            return mesIdRef.get();
+        }
+
+        public void setMesIdRef(String fmesIdRef) {
+            mesIdRef.set(fmesIdRef);
+        }
+
     }
 
     private void addUIControls(GridPane gridPane) {
@@ -475,23 +528,6 @@ public class HelloApplication extends Application {
         INTITULEField.setPrefHeight(40);
         gridPane.add(INTITULEField, 1, 8);
 
-
-//        Button addRolesButton = new Button("Add Roles");
-//        gridPane.add(addRolesButton, 1, 6);
-//        addRolesButton.setOnAction(arg0 -> {
-//            TextField prenomField = new TextField();
-//            prenomField.setPromptText("Prenom");
-//            prenomField.setPrefHeight(40);
-//            gridPane.add(prenomField, 1, 6);
-//            TextField nomField = new TextField();
-//            nomField.setPromptText("Nom");
-//            nomField.setPrefHeight(40);
-//            gridPane.add(nomField, 1, 7);
-//            TextField INTITULEField = new TextField();
-//            INTITULEField.setPromptText("Intitules");
-//            INTITULEField.setPrefHeight(40);
-//            gridPane.add(INTITULEField, 1, 8);
-//        });
         Label resumeLabel = new Label("Resume : ");
         gridPane.add(resumeLabel, 0, 9);
 
