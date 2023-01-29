@@ -3,9 +3,13 @@ package com.example.jdom_java_project;
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 
 import javafx.stage.FileChooser;
@@ -31,8 +35,10 @@ import org.jdom2.input.SAXBuilder;
 import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.html.ImageView;
 import java.io.*;
 import java.util.Arrays;
 import java.util.List;
@@ -86,12 +92,13 @@ public class HelloApplication extends Application {
         return gridPane;
     }
 
-    private void uploadXML_File(GridPane gridPane) {
+    private void uploadXML_File(GridPane gridPane) throws FileNotFoundException {
         // Add Header
         Label headerLabel = new Label("Welcome To Your Application");
         headerLabel.setFont(Font.font("Barlow", FontWeight.BOLD, 32));
         GridPane.setHalignment(headerLabel, HPos.CENTER);
         gridPane.add(headerLabel, 0, 0, 4, 1); // change column index to 0
+
 
         Label titleLabel = new Label("Get Started By Uploading Your XML File");
         titleLabel.setFont(Font.font("Barlow", 24));
@@ -155,7 +162,7 @@ public class HelloApplication extends Application {
         VisualizeData.setPrefHeight(40);
         VisualizeData.setPrefWidth(100);
         GridPane.setHalignment(VisualizeData, HPos.RIGHT);
-        gridPane.add(VisualizeData, 0, 18, 4, 1);
+        gridPane.add(VisualizeData, 0, 16, 4, 1);
 
         VisualizeData.setOnAction(new EventHandler<ActionEvent>() {
                                       @Override
@@ -186,18 +193,16 @@ public class HelloApplication extends Application {
 
 
                                               SAXBuilder saxBuilder = new SAXBuilder();
-                                              Document document = saxBuilder.build(new File("Films.xml"));
+                                              Document document = saxBuilder.build(new File(fileField.getText()));
                                               Element rootNode = document.getRootElement();
                                               List<Element> list = rootNode.getChildren("FILM");
 
 
-// Create table
                                               TableView<Person> table = new TableView<>();
                                               table.setPrefWidth(1200);
                                               table.setPrefHeight(500);
                                               table.setEditable(true);
 
-// Create columns
                                               TableColumn col1 = new TableColumn<>("TITRE");
                                               col1.setMinWidth(150);
                                               col1.setCellValueFactory(new PropertyValueFactory<>("firstName"));
@@ -242,10 +247,6 @@ public class HelloApplication extends Application {
 //                                                  row.addAll(Arrays.asList(titre, genre, pays, roles, resume));
 //                                                  model.addRow(new Object[]{titre, genre, pays, roles, resume});
                                               //}
-                                              ObservableList<Person> row;
-                                              row = FXCollections.observableArrayList(
-                                                      new Person()
-                                              );
 
                                               for (int i = 0; i < list.size(); i++) {
                                                   Element node = (Element) list.get(i);
@@ -254,7 +255,7 @@ public class HelloApplication extends Application {
                                                           new Person(node.getChildText("TITRE"))
                                                   );
                                                   System.out.println("mkayna m3ana");
-                                             System.out.println(row);
+                                                  System.out.println(row);
 //                                                  row.add(node.getChildText("TITRE"));
 //                                                  System.out.println(node.getChildText("TITRE"));
 //                                                  row.add(node.getChildText("ANNEE"));
@@ -265,13 +266,8 @@ public class HelloApplication extends Application {
 //                                                  row.add(node.getChildText("NOM"));
 //                                                  row.add(node.getChildText("RESUME"));
 
-                                                  //table.getItems().add(new Person(new String(table.setItems(row))));
-                                                  table.getItems().add(new Person(table.getItems().add(row).toString()));
-
-
+                                                  table.getItems().addAll(row);
                                               }
-                                              table.setItems(row);
-
                                               VBox vBox = new VBox();
                                               vBox.getChildren().add(table);
                                               //getData(vBox);
@@ -293,53 +289,15 @@ public class HelloApplication extends Application {
 
                                       }
 
-
-                                      public VBox getData(VBox vBox) {
-                                          // read XML file and display it
-
-                                          try {
-                                              SAXBuilder builder = new SAXBuilder();
-                                              File xmlFile = new File("Films.xml");
-                                              Document document = (Document) builder.build(xmlFile);
-                                              Element rootNode = document.getRootElement();
-                                              List<Element> list = rootNode.getChildren("FILM");
-                                              for (int i = 0; i < list.size(); i++) {
-                                                  Element node = (Element) list.get(i);
-                                                  Label title = new Label("Title: " + node.getChildText("TITRE"));
-                                                  vBox.getChildren().add(title);
-                                                  Label annee = new Label("Annee: " + node.getChildText("ANNEE"));
-                                                  vBox.getChildren().add(annee);
-
-                                                  Label genre = new Label("Genre: " + node.getChildText("GENRE"));
-                                                  gridPane.add(genre, 2, i);
-                                                  Label pays = new Label("Pays: " + node.getChildText("PAYS"));
-                                                  gridPane.add(pays, 3, i);
-                                                  Label MES = new Label("MES: " + node.getChildText("MES"));
-                                                  gridPane.add(MES, 4, i);
-                                                  Label prenom = new Label("Prenom: " + node.getChildText("PRENOM"));
-                                                  gridPane.add(prenom, 5, i);
-                                                  Label nom = new Label("Nom: " + node.getChildText("NOM"));
-                                                  gridPane.add(nom, 6, i);
-                                                  Label resume = new Label("Resume: " + node.getChildText("RESUME"));
-                                                  gridPane.add(resume, 7, i);
-
-                                              }
-
-                                              return vBox;
-                                          } catch (IOException | JDOMException io) {
-                                              System.out.println(io.getMessage());
-                                          }
-                                          return vBox;
-                                      }
                                   }
 
         );
 
         Button VisualizeXMLFile = new Button("Visualize XML File");
         VisualizeXMLFile.setPrefHeight(40);
-        VisualizeXMLFile.setPrefWidth(180);
-        GridPane.setHalignment(VisualizeXMLFile, HPos.RIGHT);
-        gridPane.add(VisualizeXMLFile, 0, 20, 4, 1);
+        VisualizeXMLFile.setPrefWidth(150);
+        GridPane.setHalignment(VisualizeXMLFile, HPos.LEFT);
+        gridPane.add(VisualizeXMLFile, 0, 16, 4, 1);
 
         VisualizeXMLFile.setOnAction(new EventHandler<ActionEvent>() {
                                          @Override
@@ -388,7 +346,7 @@ public class HelloApplication extends Application {
                                              Element RolesElement = null;
                                              Element RoleElement = null;
 
-                                             Element FilmsElement = ((Document) (new SAXBuilder()).build(new File("Films.xml"))).getRootElement();
+                                             Element FilmsElement = ((Document) (new SAXBuilder()).build(new File(fileField.getText()))).getRootElement();
                                              textArea.appendText("<" + FilmsElement.getName() + ">\n");
 
                                              List<Element> FilmsList = FilmsElement.getChildren("FILM");
@@ -504,28 +462,48 @@ public class HelloApplication extends Application {
         Label RolesLabel = new Label("Roles : ");
         gridPane.add(RolesLabel, 0, 6);
 
-        Button addRolesButton = new Button("Add Roles");
-        gridPane.add(addRolesButton, 1, 6);
-        addRolesButton.setOnAction(arg0 -> {
-            TextField prenomField = new TextField();
-            prenomField.setPrefHeight(40);
-            gridPane.add(prenomField, 1, 6);
-            TextField nomField = new TextField();
-            nomField.setPrefHeight(40);
-            gridPane.add(nomField, 1, 7);
-        });
+        TextField prenomField = new TextField();
+        prenomField.setPromptText("Prenom");
+        prenomField.setPrefHeight(40);
+        gridPane.add(prenomField, 1, 6);
+        TextField nomField = new TextField();
+        nomField.setPromptText("Nom");
+        nomField.setPrefHeight(40);
+        gridPane.add(nomField, 1, 7);
+        TextField INTITULEField = new TextField();
+        INTITULEField.setPromptText("Intitules");
+        INTITULEField.setPrefHeight(40);
+        gridPane.add(INTITULEField, 1, 8);
+
+
+//        Button addRolesButton = new Button("Add Roles");
+//        gridPane.add(addRolesButton, 1, 6);
+//        addRolesButton.setOnAction(arg0 -> {
+//            TextField prenomField = new TextField();
+//            prenomField.setPromptText("Prenom");
+//            prenomField.setPrefHeight(40);
+//            gridPane.add(prenomField, 1, 6);
+//            TextField nomField = new TextField();
+//            nomField.setPromptText("Nom");
+//            nomField.setPrefHeight(40);
+//            gridPane.add(nomField, 1, 7);
+//            TextField INTITULEField = new TextField();
+//            INTITULEField.setPromptText("Intitules");
+//            INTITULEField.setPrefHeight(40);
+//            gridPane.add(INTITULEField, 1, 8);
+//        });
         Label resumeLabel = new Label("Resume : ");
-        gridPane.add(resumeLabel, 0, 8);
+        gridPane.add(resumeLabel, 0, 9);
 
         TextArea resumeField = new TextArea();
         resumeField.setPrefHeight(400);
-        gridPane.add(resumeField, 1, 8);
+        gridPane.add(resumeField, 1, 9);
 
         Button submitButton = new Button("Submit");
         submitButton.setPrefHeight(40);
         submitButton.setDefaultButton(true);
         submitButton.setPrefWidth(100);
-        gridPane.add(submitButton, 0, 9, 2, 1);
+        gridPane.add(submitButton, 0, 11, 2, 1);
 
         GridPane.setHalignment(submitButton, HPos.CENTER);
         GridPane.setMargin(submitButton, new Insets(20, 0, 20, 0));
@@ -608,9 +586,9 @@ public class HelloApplication extends Application {
                     Element roles = new Element("ROLES");
                     FILM.addContent(roles);
                     Element role = new Element("ROLE");
-                    role.setAttribute("NOM", "NOM");
-                    role.setAttribute("PRENOM", "PRENOM");
-                    role.setAttribute("INTITULE", "INTITULE");
+                    role.setAttribute("NOM", prenomField.getText());
+                    role.setAttribute("PRENOM", prenomField.getText());
+                    role.setAttribute("INTITULE", prenomField.getText());
                     roles.addContent(role);
                     // save to xml file
 

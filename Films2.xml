@@ -1,26 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet type="text/xsl" href="film.xsl"?>
 <FILMS>
-  <FILM annee="2023-01-28">
-    <TITRE>hhh</TITRE>
-    <ANNEE>2023-01-28</ANNEE>
-    <GENRE>hhh</GENRE>
-    <PAYS>hhh</PAYS>
-    <MES>hhh</MES>
-    <RESUME>hhh</RESUME>
-    <ROLES>
-      <ROLE NOM="NOM" PRENOM="PRENOM" INTITULE="INTITULE" />
-    </ROLES>
-  </FILM>
-  <FILM annee="2023-01-28">
-    <TITRE>oussa</TITRE>
-    <ANNEE>2023-01-28</ANNEE>
-    <GENRE>oussa</GENRE>
-    <PAYS>oussa</PAYS>
-    <MES>oussa</MES>
-    <RESUME>oussa</RESUME>
-    <ROLES>
-      <ROLE NOM="NOM" PRENOM="PRENOM" INTITULE="INTITULE" />
-    </ROLES>
-  </FILM>
+
 </FILMS>
