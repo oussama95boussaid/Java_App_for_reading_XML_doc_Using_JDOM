@@ -1,4 +1,5 @@
 package com.example.jdom_java_project;
+//OUSSAMA BOUSSAID & WAFA ABENAY
 
 import javafx.application.Application;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,7 +24,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Window;
-
+//OUSSAMA BOUSSAID & WAFA ABENAY
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.TextArea;
@@ -59,7 +60,6 @@ public class HelloApplication extends Application {
         primaryStage.setScene(scene);
 
         primaryStage.show();
-
     }
 
     private GridPane createRegistrationFormPane() {
@@ -67,7 +67,6 @@ public class HelloApplication extends Application {
         GridPane gridPane = new GridPane();
 
         // Position the pane at the center of the screen, both vertically and
-        // horizontally
         gridPane.setAlignment(Pos.CENTER);
 
         // Set a padding of 20px on each side
@@ -168,16 +167,14 @@ public class HelloApplication extends Application {
 
             public void handle(ActionEvent event) {
                 if (fileField.getText().isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!",
-                            "Please Select XML File");
+                    showAlert(Alert.AlertType.ERROR, gridPane.getScene().getWindow(), "Form Error!", "Please Select XML File");
                     return;
                 }
-
                 try {
 
                     Stage stage = new Stage();
                     stage.setTitle("Visualize Data");
-                    stage.setMinWidth(1200);
+                    stage.setMinWidth(1070);
                     stage.setMinHeight(((550)));
                     final Label label = new Label("FILM DATA");
                     label.setFont(new Font("Arial", 20));
@@ -186,20 +183,17 @@ public class HelloApplication extends Application {
                     Document document = saxBuilder.build(new File(fileField.getText()));
                     Element rootNode = document.getRootElement();
                     List<Element> list = rootNode.getChildren("FILM");
-
                     TableView<Person> table = new TableView<>();
-                    table.setPrefWidth(1200);
+                    table.setPrefWidth(1070);
                     table.setPrefHeight(500);
                     table.setEditable(true);
 
                     TableColumn col1 = new TableColumn<>("TITRE");
                     col1.setMinWidth(150);
                     col1.setCellValueFactory(new PropertyValueFactory<>("titel"));
-
                     TableColumn col2 = new TableColumn<>("ANNEE");
                     col2.setMinWidth(150);
                     col2.setCellValueFactory(new PropertyValueFactory<>("annee"));
-
                     TableColumn col3 = new TableColumn<>("GENRE");
                     col3.setMinWidth(150);
                     col3.setCellValueFactory(new PropertyValueFactory<>("genre"));
@@ -209,18 +203,15 @@ public class HelloApplication extends Application {
                     TableColumn col5 = new TableColumn<>("PRENOM");
                     col5.setMinWidth(150);
                     col5.setCellValueFactory(new PropertyValueFactory<>("prenom"));
-
                     TableColumn col6 = new TableColumn<>("NOM");
                     col6.setMinWidth(150);
                     col6.setCellValueFactory(new PropertyValueFactory<>("nom"));
                     TableColumn col7 = new TableColumn<>("RESUME");
                     col7.setMinWidth(150);
                     col7.setCellValueFactory(new PropertyValueFactory<>("resume"));
-                    TableColumn col8 = new TableColumn<>("MES idRef ");
-                    col8.setCellValueFactory(new PropertyValueFactory<>("mesIdRef"));
-                    col8.setMinWidth(150);
 
-                    table.getColumns().addAll(col1, col2, col3, col4, col5, col6, col7, col8);
+
+                    table.getColumns().addAll(col1, col2, col3, col4, col5, col6, col7);
 
                     for (int i = 0; i < list.size(); i++) {
                         Element node = (Element) list.get(i);
@@ -236,12 +227,12 @@ public class HelloApplication extends Application {
                             if (nomNode != null) {
                                 nom = nomNode.getText();
                             }
-
-                        }
+                                                  }
 
                         ObservableList<Person> row;
                         row = FXCollections.observableArrayList(new Person(node.getChildText("TITRE"),
-                                node.getAttributeValue("Annee"), node.getChildText("GENRE"), node.getChildText("PAYS"),
+                                node.getAttributeValue("Annee"),
+                                node.getChildText("GENRE"), node.getChildText("PAYS"),
                                 prenom, nom,
                                 node.getChildText("RESUME"),
                                 node.getAttributeValue("mesIdRef")));
@@ -252,7 +243,6 @@ public class HelloApplication extends Application {
                     }
                     VBox vBox = new VBox();
                     vBox.getChildren().add(table);
-                    // getData(vBox);
 
                     vBox.setStyle("-fx-padding: 10;" +
                             "-fx-border-width: 2;" +
@@ -260,7 +250,6 @@ public class HelloApplication extends Application {
 
                     Scene scene = new Scene(vBox);
                     stage.setScene(scene);
-
                     stage.show();
 
                 } catch (IOException | JDOMException io) {
@@ -304,7 +293,6 @@ public class HelloApplication extends Application {
 
                     Scene scene = new Scene(vBox, 600, 400);
                     stage.setScene(scene);
-
                     stage.show();
 
                 } catch (IOException | JDOMException io) {
@@ -338,7 +326,6 @@ public class HelloApplication extends Application {
                     textArea.appendText("\t\t<PAYS>" + FilmElement.getChildText("PAYS") + "</PAYS>\n");
                     textArea.appendText("\t\t<MES>" + FilmElement.getChildText("MES") + "</MES>\n");
                     textArea.appendText("\t\t<RESUME>" + FilmElement.getChildText("RESUME") + "</RESUME>\n");
-
                     RolesElement = FilmsList.get(i).getChild("ROLES");
 
                     textArea.appendText("\t\t<" + RolesElement.getName() + ">\n");
@@ -367,6 +354,7 @@ public class HelloApplication extends Application {
                     textArea.appendText(
                             "\t\t<ANNEENAISS>" + artistElement.getChildText("ANNEENAISS") + "</ANNEENAISS>\n");
                     textArea.appendText("\t</" + artistElement.getName() + ">\n");
+
                 }
 
                 textArea.appendText("<" + FilmsElement.getName() + ">\n");
@@ -391,7 +379,7 @@ public class HelloApplication extends Application {
         public final SimpleStringProperty mesIdRef;
 
         Person(String ftitel, String fannee, String fgenre, String fpays, String fprenom, String fnom, String fresume,
-                String fmesIdRef) {
+               String fmesIdRef) {
             this.titel = new SimpleStringProperty(ftitel);
             this.annee = new SimpleStringProperty(fannee);
             this.genre = new SimpleStringProperty(fgenre);
@@ -652,5 +640,7 @@ public class HelloApplication extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+//OUSSAMA BOUSSAID & WAFA ABENAY
 
 }
